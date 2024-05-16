@@ -27,5 +27,7 @@ export async function fetcher<T = any>(...args: FetcherArrayArgs): Promise<T> {
   return fetch(...args)
     .then((res) => res.json())
     .then((res) => res?.data)
-    .catch((error) => {console.error(error); alert(error)});
+    .catch((error) => {
+      console.error(error);
+    });
 }
