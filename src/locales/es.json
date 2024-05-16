@@ -1,0 +1,11 @@
+{
+  "translation": {
+    "menu": {
+      "sell": "ventas",
+      "expenses": "Gastos",
+      "stock": "Stock",
+      "products": "Productos",
+      "suppliers": "Proveedores"
+    }
+  }
+}

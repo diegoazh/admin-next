@@ -1,0 +1,82 @@
+{
+  "translation": {
+    "menu": {
+      "sell": "ventas",
+      "expenses": "gastos",
+      "stock": "stock",
+      "products": "productos",
+      "suppliers": "proveedores",
+      "categories": "categorías",
+      "subtitle": {
+        "aux": "auxiliar",
+        "actions": "acciones"
+      }
+    },
+    "table": {
+      "emptyContent": "Sin contenido",
+      "columns": {
+        "actions": "Acciones"
+      }
+    },
+    "products": {
+      "entityName_one": "producto",
+      "entityName_other": "productos",
+      "buttons": {
+        "newItem": { "tooltip": "crear {{entityName}}" }
+      },
+      "table": {
+        "name": "Tabla de {{entityName}}",
+        "columns": {
+          "category": "categoría",
+          "name": "nombre",
+          "available": "disponible"
+        }
+      },
+      "modals": {
+        "showTitle": "viendo {{entityName}}: {{productName}}",
+        "createTitle": "crear {{entityName}}",
+        "updateTitle": "actualizar {{entityName}}: {{productName}}",
+        "deleteTitle": "eliminar {{entityName}}: {{productName}}",
+        "cancelButton": "cancelar",
+        "okButton": "crear"
+      }
+    },
+    "categories": {
+      "entityName_one": "categoría",
+      "entityName_other": "categorias",
+      "buttons": {
+        "newItem": { "tooltip": "crear {{entityName}}" }
+      },
+      "table": {
+        "name": "Tabla de {{entityName}}",
+        "columns": {
+          "name": "nombre"
+        }
+      },
+      "modals": {
+        "showTitle": "{{itemName}}",
+        "createTitle": "crear {{entityName}}",
+        "updateTitle": "actualizar {{itemName}}",
+        "deleteTitle": "¿eliminar {{itemName}}?",
+        "cancelButton": "no",
+        "okButton": "si"
+      },
+      "form": {
+        "labels": {
+          "name": "Nombre"
+        },
+        "buttons": {
+          "create": "crear",
+          "update": "actualizar"
+        }
+      },
+      "show": {
+        "table": "detalles de categoría",
+        "columns": {
+          "item": "propiedad",
+          "value": "valor"
+        }
+      }
+    }
+  }
+}
