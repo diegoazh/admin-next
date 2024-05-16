@@ -88,7 +88,7 @@ export function TableCrud<T extends Record<string, any>>({
     <div className="flex flex-col w-full">
       <div className="flex justify-between p-2">
         <h1 className="capitalize">{t(entityName, { count: 0 })}</h1>
-        <Tooltip showArrow placement="left" content={newItemButtonTooltipText}>
+        <Tooltip showArrow placement="left" className='capitalize' content={newItemButtonTooltipText}>
           <Button
             isIconOnly
             variant="solid"

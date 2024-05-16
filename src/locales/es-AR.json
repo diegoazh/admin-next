@@ -16,6 +16,11 @@
       "emptyContent": "Sin contenido",
       "columns": {
         "actions": "Acciones"
+      },
+      "tooltips": {
+        "show": "ver",
+        "update": "actualizar",
+        "delete": "eliminar"
       }
     },
     "products": {
