@@ -9,16 +9,19 @@ import {
 } from '@nextui-org/react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, ProductCategoryEntity } from '../app/models';
-import { ModalCrudContext } from './TableCrudModal';
+import { AppEntity, ProductCategoryEntity } from '../app/models';
+import { ModalContextType, ModalCrudContext } from './TableCrudModal';
 
 export function ProductCategoryShow() {
   const { t } = useTranslation();
-  const { item } = useContext(ModalCrudContext);
+  const { item } = useContext<ModalContextType<ProductCategoryEntity>>(ModalCrudContext);
 
   const keys = Object.keys(item || {}) as Array<keyof ProductCategoryEntity>;
   const tableEmptyContentText = t('table.emptyContent');
-  const defineCellContent = (key: keyof AppEntities, item?: AppEntities) => {
+  const defineCellContent = (
+    key: keyof AppEntity<ProductCategoryEntity>,
+    item?: AppEntity<ProductCategoryEntity>
+  ) => {
     if (key === 'id') {
       return (
         <Code size="sm" className="text-small text-wrap">

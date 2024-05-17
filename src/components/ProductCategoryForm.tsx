@@ -9,7 +9,8 @@ import {
   productCategoriesKey,
   useMutateProductCategory,
 } from '../app/hooks';
-import { ModalCrudContext } from './TableCrudModal';
+import { ProductCategoryEntity } from '../app/models';
+import { ModalContextType, ModalCrudContext } from './TableCrudModal';
 
 type ProductCategoryInputs = {
   name: string;
@@ -21,7 +22,8 @@ export interface IProductCategoryFormProps {
 }
 
 export function ProductCategoryForm({ isUpdate }: IProductCategoryFormProps) {
-  const { isOpen, onClose, item } = useContext(ModalCrudContext);
+  const { isOpen, onClose, item } =
+    useContext<ModalContextType<ProductCategoryEntity>>(ModalCrudContext);
   const {
     register,
     handleSubmit,
@@ -48,7 +50,7 @@ export function ProductCategoryForm({ isUpdate }: IProductCategoryFormProps) {
         defaultValue={isUpdate ? item?.name : ''}
         type="text"
         label={t('categories.form.labels.name')}
-        className='mb-4'
+        className="mb-4"
       />
       <Input
         {...register('profit')}

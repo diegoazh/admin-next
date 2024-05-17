@@ -21,6 +21,14 @@
         "show": "ver",
         "update": "actualizar",
         "delete": "eliminar"
+      },
+      "modals": {
+        "showTitle": "{{itemName}}",
+        "createTitle": "crear {{entityName}}",
+        "updateTitle": "actualizar {{itemName}}",
+        "deleteTitle": "¿eliminar {{itemName}}?",
+        "cancelButton": "no",
+        "okButton": "si"
       }
     },
     "products": {
@@ -58,14 +66,6 @@
           "name": "nombre",
           "profit": "ganancia %"
         }
-      },
-      "modals": {
-        "showTitle": "{{itemName}}",
-        "createTitle": "crear {{entityName}}",
-        "updateTitle": "actualizar {{itemName}}",
-        "deleteTitle": "¿eliminar {{itemName}}?",
-        "cancelButton": "no",
-        "okButton": "si"
       },
       "form": {
         "labels": {

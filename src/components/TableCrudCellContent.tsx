@@ -95,5 +95,8 @@ export function TableCrudCellContent({
     );
   }
 
-  return iconsForBooleanValuesOrContent(data[columnName]);
+  const cols = columnName.split('.');
+  const columnData = cols.reduce((result, col) => result[col], data);
+  
+  return iconsForBooleanValuesOrContent(columnData);
 }

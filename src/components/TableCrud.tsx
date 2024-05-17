@@ -12,6 +12,7 @@ import {
 } from '@nextui-org/react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppEntity, AppEntities } from '../app/models';
 import { TableCrudCellContent } from './TableCrudCellContent';
 import { ITableCrudModalProps, TableCrudModal } from './TableCrudModal';
 
@@ -32,10 +33,13 @@ export interface ITableCrudProps<T> {
   modalCancelButtonText: string;
   onModalCancelAction: () => void;
   modalOkButtonText: string;
-  onModalOkAction: (modalType?: 'show' | 'create' | 'update' | 'delete', item?: any) => void | Promise<void>;
+  onModalOkAction: (
+    modalType?: 'show' | 'create' | 'update' | 'delete',
+    item?: any
+  ) => void | Promise<void>;
 }
 
-export function TableCrud<T extends Record<string, any>>({
+export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
   columnActionName,
   entityName,
   isStriped = false,
@@ -53,15 +57,15 @@ export function TableCrud<T extends Record<string, any>>({
   onModalCancelAction,
   modalOkButtonText,
   onModalOkAction,
-}: ITableCrudProps<T>) {
+}: ITableCrudProps<U>) {
   const [modalType, setModalType] = useState<
     'show' | 'create' | 'update' | 'delete' | undefined
   >(undefined);
-  const [item, setItem] = useState<T>();
+  const [item, setItem] = useState<U>();
   const { t } = useTranslation();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const modalProps: ITableCrudModalProps<T> = {
+  const modalProps: ITableCrudModalProps<U> = {
     entityName: t(entityName, { count: 1 }),
     item,
     isOpen,
@@ -88,7 +92,12 @@ export function TableCrud<T extends Record<string, any>>({
     <div className="flex flex-col w-full">
       <div className="flex justify-between p-2">
         <h1 className="capitalize">{t(entityName, { count: 0 })}</h1>
-        <Tooltip showArrow placement="left" className='capitalize' content={newItemButtonTooltipText}>
+        <Tooltip
+          showArrow
+          placement="left"
+          className="capitalize"
+          content={newItemButtonTooltipText}
+        >
           <Button
             isIconOnly
             variant="solid"

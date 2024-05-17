@@ -3,38 +3,29 @@
 import { Card, Skeleton } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ITableCrudProps, TableCrud } from '../../components';
-import { useProducts } from '../hooks';
+import { useProductCategories, useProducts } from '../hooks';
+import { ProductEntity } from '../models';
 
 const Products = () => {
-  const { data, error, isLoading } = useProducts<
-    {
-      name: string;
-      images?: string;
-      description?: string;
-      available: boolean;
-      productCategoryId: string;
-    }[]
-  >();
+  const { data, error, isLoading } = useProducts();
   const { t } = useTranslation();
 
-  const tableCrudProps: ITableCrudProps<any> = {
-    modalContent: <div></div>,
+  const tableCrudProps: ITableCrudProps<ProductEntity> = {
+    modalCreateContent: <></>,
+    modalDeleteContent: <></>,
+    modalShowContent: <></>,
+    modalUpdateContent: <></>,
+    isStriped: true,
     entityName: t('products.entityName'),
-    newItemButtonTooltipText: t('products.buttons.newItem.tooltip'),
-    modalCancelButtonText: t('products.modals.cancelBtn'),
+    newItemButtonTooltipText: t('products.buttons.newItem.tooltip', {
+      entityName: t('products.entityName', { count: 1 }),
+    }),
+    modalCancelButtonText: t('table.modals.cancelButton'),
     onModalCancelAction: () => console.log('cancel works!'),
-    modalOkButtonText: t('products.modals.okBtn'),
+    modalOkButtonText: t('table.modals.okButton'),
     onModalOkAction: () => console.log('ok works!'),
-    tableColumns: ['productCategoryId', 'name', 'available'],
-    tableContent: [
-      {
-        name: 'test',
-        images: '',
-        description: '',
-        available: false,
-        productCategoryId: 'a',
-      },
-    ],
+    tableColumns: ['productCategory.name', 'name', 'available'],
+    tableContent: data,
     tableHeaderColumnsNames: [
       t('products.table.columns.category'),
       t('products.table.columns.name'),

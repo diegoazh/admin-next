@@ -9,13 +9,14 @@ import {
 } from '@nextui-org/react';
 import { createContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, ProductCategoryEntity } from '../app/models';
+import { AppEntities, AppEntity } from '../app/models';
 
-export const ModalCrudContext = createContext<{
+export type ModalContextType<T extends AppEntities> = {
   isOpen: boolean;
   onClose: () => void;
-  item?: ProductCategoryEntity;
-}>({
+  item?: AppEntity<T>;
+};
+export const ModalCrudContext = createContext<ModalContextType<AppEntities>>({
   isOpen: false,
   onClose: () => undefined,
   item: undefined,
@@ -57,12 +58,12 @@ export function TableCrudModal<T extends AppEntities>({
     modalType: 'show' | 'create' | 'update' | 'delete'
   ): string {
     return modalType === 'show'
-      ? 'categories.modals.showTitle'
+      ? 'table.modals.showTitle'
       : modalType === 'create'
-      ? 'categories.modals.createTitle'
+      ? 'table.modals.createTitle'
       : modalType === 'update'
-      ? 'categories.modals.updateTitle'
-      : 'categories.modals.deleteTitle';
+      ? 'table.modals.updateTitle'
+      : 'table.modals.deleteTitle';
   }
 
   if (!modalType) return;

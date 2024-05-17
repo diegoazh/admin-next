@@ -1,6 +1,6 @@
 import useSWR, { SWRResponse } from 'swr';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
-import { ProductCategoryEntity } from '../models';
+import { ProductCategoryEntity, ProductEntity } from '../models';
 import { fetcher } from '../utils/functions';
 
 const baseUrl = `https://app.starter.io`;
@@ -70,6 +70,15 @@ export function useMutateProductCategory<T = unknown>(
   );
 }
 
-export function useProducts<T = unknown>(): SWRResponse<T> {
-  return useSWR<T>(productsKey, fetcher);
+export function useProducts<
+  T = ProductEntity[]
+>(): SWRResponse<T> {
+  return useSWR<T, any, typeof productsKey>(
+    productsKey,
+    (url) =>
+      fetcher(`${url}?order[0]=name&order[0]=ASC`, {
+        method: RequestMethods.GET,
+        headers: { ...CommonHeaders },
+      })
+  );
 }

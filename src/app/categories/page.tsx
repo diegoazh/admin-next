@@ -32,9 +32,9 @@ const Products = () => {
     newItemButtonTooltipText: t('categories.buttons.newItem.tooltip', {
       entityName: t('categories.entityName', { count: 1 }),
     }),
-    modalCancelButtonText: t('categories.modals.cancelButton'),
+    modalCancelButtonText: t('table.modals.cancelButton'),
     onModalCancelAction: () => console.log('cancel works!'),
-    modalOkButtonText: t('categories.modals.okButton'),
+    modalOkButtonText: t('table.modals.okButton'),
     onModalOkAction: async (modalType, item) => {
       if (modalType === 'delete') {
         await trigger({ body: JSON.stringify({ id: item?.id }) });

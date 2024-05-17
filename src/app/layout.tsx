@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="es-AR">
       <body
-        className={`dark text-foreground bg-background ${inter.className} p-4 h-screen`}
+        className={`dark text-foreground bg-background ${inter.className} p-4 min-h-screen`}
       >
         <NextUIProvider>
           <div className="grid grid-flow-col grid-cols-3">
