@@ -13,6 +13,8 @@
       }
     },
     "table": {
+      "name": "Tabla de {{entityName}}",
+      "totalItems": "se encontraron {{total}} {{entityName}}",
       "emptyContent": "Sin contenido",
       "columns": {
         "actions": "Acciones"
@@ -29,6 +31,9 @@
         "deleteTitle": "¿eliminar {{itemName}}?",
         "cancelButton": "no",
         "okButton": "si"
+      },
+      "search": {
+        "placeholder": "buscar por nombre..."
       }
     },
     "products": {
@@ -38,7 +43,6 @@
         "newItem": { "tooltip": "crear {{entityName}}" }
       },
       "table": {
-        "name": "Tabla de {{entityName}}",
         "columns": {
           "category": "categoría",
           "name": "nombre",
