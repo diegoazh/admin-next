@@ -55,7 +55,8 @@
       "table": {
         "name": "Tabla de {{entityName}}",
         "columns": {
-          "name": "nombre"
+          "name": "nombre",
+          "profit": "ganancia %"
         }
       },
       "modals": {
@@ -68,7 +69,8 @@
       },
       "form": {
         "labels": {
-          "name": "Nombre"
+          "name": "Nombre",
+          "profit": "Ganancia"
         },
         "buttons": {
           "create": "crear",

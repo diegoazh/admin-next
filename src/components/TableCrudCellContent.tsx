@@ -42,7 +42,7 @@ export function TableCrudCellContent({
       <div className="flex justify-end">
         <Tooltip
           showArrow
-          placement="left"
+          placement="top"
           className="capitalize"
           content={t('table.tooltips.show')}
         >
@@ -59,7 +59,7 @@ export function TableCrudCellContent({
         </Tooltip>
         <Tooltip
           showArrow
-          placement="left"
+          placement="top"
           className="capitalize"
           content={t('table.tooltips.update')}
         >
@@ -76,7 +76,7 @@ export function TableCrudCellContent({
         </Tooltip>
         <Tooltip
           showArrow
-          placement="left"
+          placement="top"
           className="capitalize"
           content={t('table.tooltips.delete')}
         >

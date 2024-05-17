@@ -23,7 +23,7 @@ export function useProductCategories<
   return useSWR<T, any, typeof productCategoriesKey>(
     productCategoriesKey,
     (url) =>
-      fetcher(url, {
+      fetcher(`${url}?order[0]=name&order[0]=ASC`, {
         method: RequestMethods.GET,
         headers: { ...CommonHeaders },
       })

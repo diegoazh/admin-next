@@ -41,9 +41,12 @@ const Products = () => {
         await mutate(productCategoriesKey);
       }
     },
-    tableColumns: ['name'],
+    tableColumns: ['name', 'profit'],
     tableContent: data,
-    tableHeaderColumnsNames: [t('categories.table.columns.name')],
+    tableHeaderColumnsNames: [
+      t('categories.table.columns.name'),
+      t('categories.table.columns.profit'),
+    ],
     tableEmptyContentText: t('table.emptyContent'),
     tableName: t('categories.table.name'),
     columnActionName: t('table.columns.actions'),

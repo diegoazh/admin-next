@@ -9,11 +9,12 @@ import {
 } from '@nextui-org/react';
 import { createContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppEntities, ProductCategoryEntity } from '../app/models';
 
 export const ModalCrudContext = createContext<{
   isOpen: boolean;
   onClose: () => void;
-  item?: any;
+  item?: ProductCategoryEntity;
 }>({
   isOpen: false,
   onClose: () => undefined,
@@ -35,7 +36,7 @@ export interface ITableCrudModalProps<T> {
   onOpenChange: () => void;
 }
 
-export function TableCrudModal<T extends Record<string, any>>({
+export function TableCrudModal<T extends AppEntities>({
   entityName,
   item,
   isOpen,

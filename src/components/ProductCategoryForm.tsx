@@ -13,6 +13,7 @@ import { ModalCrudContext } from './TableCrudModal';
 
 type ProductCategoryInputs = {
   name: string;
+  profit: number;
 };
 
 export interface IProductCategoryFormProps {
@@ -47,6 +48,13 @@ export function ProductCategoryForm({ isUpdate }: IProductCategoryFormProps) {
         defaultValue={isUpdate ? item?.name : ''}
         type="text"
         label={t('categories.form.labels.name')}
+        className='mb-4'
+      />
+      <Input
+        {...register('profit')}
+        type="number"
+        label={t('categories.form.labels.profit')}
+        defaultValue={isUpdate ? item?.profit.toString() : '0'}
       />
       <div className="flex justify-end py-4">
         <Button
