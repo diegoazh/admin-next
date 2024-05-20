@@ -86,7 +86,13 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
     setPages(pages);
 
     return items?.slice(start, end);
-  }, [page, tableContent, hasSearchFilter, filterValue]);
+  }, [
+    page,
+    tableContent,
+    hasSearchFilter,
+    filterValue,
+    columnToFilterOnSearch,
+  ]);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
