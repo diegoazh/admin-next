@@ -1,12 +1,13 @@
 'use client';
 
-import { Card, Skeleton } from '@nextui-org/react';
+import { Card, Code, Skeleton } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { mutate } from 'swr';
 import {
+  IDefineShowCellContentFn,
   ITableCrudProps,
   ProductCategoryForm,
-  ProductCategoryShow,
+  ShowKeyValueItemTable,
   TableCrud,
 } from '../../components';
 import {
@@ -22,11 +23,62 @@ const Products = () => {
   const { t } = useTranslation();
   const { trigger } = useMutateProductCategory(RequestMethods.DELETE);
 
+  const headerColumns = [
+    { key: 'property', label: t('table.show.columns.property') },
+    { key: 'value', label: t('table.show.columns.value') },
+  ];
+  const defineCellContent: IDefineShowCellContentFn = (key, item) => {
+    if (key === 'property') {
+      return item?.[key];
+    }
+
+    if (key === 'value') {
+      switch (item?.['property']) {
+        case 'id'.toUpperCase():
+          return (
+            <Code size="sm" className="text-small text-wrap">
+              {item?.[key]}
+            </Code>
+          );
+
+        case t('createdAt').toUpperCase():
+        case t('updatedAt').toUpperCase():
+        case t('deletedAt').toUpperCase(): {
+          const date = item?.[key];
+          return date ? new Date().toLocaleDateString() : '';
+        }
+
+        case t('profit').toUpperCase(): {
+          return `${item?.[key]} %`;
+        }
+
+        default:
+          return item?.[key];
+      }
+    }
+  };
+
   const tableCrudProps: ITableCrudProps<ProductCategoryEntity> = {
     isStriped: true,
     modalCreateContent: <ProductCategoryForm />,
-    modalDeleteContent: <ProductCategoryShow />,
-    modalShowContent: <ProductCategoryShow />,
+    modalDeleteContent: (
+      <ShowKeyValueItemTable<ProductCategoryEntity>
+        tableTitle={t('table.show.title', {
+          entityName: t('categories.entityName', { count: 1 }),
+        })}
+        headerColumns={headerColumns}
+        defineCellContent={defineCellContent}
+      />
+    ),
+    modalShowContent: (
+      <ShowKeyValueItemTable<ProductCategoryEntity>
+        tableTitle={t('table.show.title', {
+          entityName: t('categories.entityName', { count: 1 }),
+        })}
+        headerColumns={headerColumns}
+        defineCellContent={defineCellContent}
+      />
+    ),
     modalUpdateContent: <ProductCategoryForm isUpdate />,
     entityNameTranslationKey: 'categories.entityName', // TODO: review this key
     newItemButtonTooltipText: t('categories.buttons.newItem.tooltip', {

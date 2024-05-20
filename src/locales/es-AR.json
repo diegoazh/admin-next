@@ -1,5 +1,15 @@
 {
   "translation": {
+    "yes": "si",
+    "no": "no",
+    "name": "nomber",
+    "profit": "ganancia",
+    "createdAt": "creado el",
+    "updatedAt": "actualizado el",
+    "deletedAt": "eliminado el",
+    "description": "descripción",
+    "available": "disponible",
+    "productCategory": "categoría",
     "menu": {
       "sell": "ventas",
       "expenses": "gastos",
@@ -37,6 +47,13 @@
       },
       "goToPage": {
         "placeholder": "ir a página..."
+      },
+      "show": {
+        "title": "detalles de {{entityName}}",
+        "columns": {
+          "property": "propiedad",
+          "value": "valor"
+        }
       }
     },
     "products": {
@@ -83,13 +100,6 @@
         "buttons": {
           "create": "crear",
           "update": "actualizar"
-        }
-      },
-      "show": {
-        "table": "detalles de categoría",
-        "columns": {
-          "item": "propiedad",
-          "value": "valor"
         }
       }
     }

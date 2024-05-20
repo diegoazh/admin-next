@@ -1,12 +1,7 @@
-import {
-  CheckIcon,
-  EyeIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
-import { Tooltip } from '@nextui-org/react';
+import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Chip, Tooltip } from '@nextui-org/react';
 import React from 'react';
+import { Translation } from 'react-i18next';
 
 export interface IRenderCellContentProps<T> {
   columnName: React.Key;
@@ -82,9 +77,13 @@ export function renderCellContent<T>({
 
   if (typeof columnData === 'boolean') {
     return columnData ? (
-      <CheckIcon className="w-5" />
+      <Chip variant="bordered" color="success">
+        <Translation>{(t, { i18n }) => t('yes')}</Translation>
+      </Chip>
     ) : (
-      <XMarkIcon className="w-5" />
+      <Chip variant="bordered" color="danger">
+        <Translation>{(t, { i18n }) => t('no')}</Translation>
+      </Chip>
     );
   }
 
