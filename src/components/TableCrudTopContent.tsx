@@ -6,6 +6,7 @@ export interface ITableCrudTopContentProps {
   title: string;
   newItemButtonTooltipText: string;
   onPress: () => void;
+  searchPlaceholder: string;
   filterValue: string;
   onClear: () => void;
   onSearchChange: () => void;
@@ -16,6 +17,7 @@ export function TableCrudTopContent({
   title,
   newItemButtonTooltipText,
   onPress,
+  searchPlaceholder,
   filterValue,
   onClear,
   onSearchChange,
@@ -32,7 +34,7 @@ export function TableCrudTopContent({
         <Input
           isClearable
           className="w-full sm:max-w-[44%]"
-          placeholder={t('table.search.placeholder')}
+          placeholder={searchPlaceholder}
           startContent={<MagnifyingGlassIcon className="w-6" />}
           value={filterValue}
           onClear={onClear}

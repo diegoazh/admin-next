@@ -3,7 +3,7 @@
 import { Card, Skeleton } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { ITableCrudProps, TableCrud } from '../../components';
-import { useProductCategories, useProducts } from '../hooks';
+import { useProducts } from '../hooks';
 import { ProductEntity } from '../models';
 
 const Products = () => {
@@ -16,7 +16,7 @@ const Products = () => {
     modalShowContent: <></>,
     modalUpdateContent: <></>,
     isStriped: true,
-    entityName: t('products.entityName'),
+    entityNameTranslationKey: 'products.entityName',
     newItemButtonTooltipText: t('products.buttons.newItem.tooltip', {
       entityName: t('products.entityName', { count: 1 }),
     }),
@@ -24,16 +24,18 @@ const Products = () => {
     onModalCancelAction: () => console.log('cancel works!'),
     modalOkButtonText: t('table.modals.okButton'),
     onModalOkAction: () => console.log('ok works!'),
-    tableColumns: ['productCategory.name', 'name', 'available'],
+    columnToFilterOnSearch: 'name',
     tableContent: data,
     tableHeaderColumnsNames: [
-      t('products.table.columns.category'),
-      t('products.table.columns.name'),
-      t('products.table.columns.available'),
+      { key: 'productCategory.name', label: t('products.table.columns.category') },
+      { key: 'name', label: t('products.table.columns.name') },
+      { key: 'available', label: t('products.table.columns.available') },
+      { key: 'actions', label: t('products.table.columns.actions') },
     ],
     tableEmptyContentText: t('table.emptyContent'),
-    tableName: t('products.table.name'),
-    columnActionName: t('table.columns.actions'),
+    tableName: t('table.name', {
+      entityName: t('products.entityName', { count: 0 }),
+    }),
   };
 
   if (isLoading) {

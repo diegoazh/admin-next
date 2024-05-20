@@ -28,7 +28,7 @@ const Products = () => {
     modalDeleteContent: <ProductCategoryShow />,
     modalShowContent: <ProductCategoryShow />,
     modalUpdateContent: <ProductCategoryForm isUpdate />,
-    entityName: 'categories.entityName', // TODO: review this key
+    entityNameTranslationKey: 'categories.entityName', // TODO: review this key
     newItemButtonTooltipText: t('categories.buttons.newItem.tooltip', {
       entityName: t('categories.entityName', { count: 1 }),
     }),
@@ -41,15 +41,15 @@ const Products = () => {
         await mutate(productCategoriesKey);
       }
     },
-    tableColumns: ['name', 'profit'],
+    columnToFilterOnSearch: 'name',
     tableContent: data,
     tableHeaderColumnsNames: [
-      t('categories.table.columns.name'),
-      t('categories.table.columns.profit'),
+      { key: 'name', label: t('categories.table.columns.name') },
+      { key: 'profit', label: t('categories.table.columns.profit') },
+      { key: 'actions', label: t('table.columns.actions') },
     ],
     tableEmptyContentText: t('table.emptyContent'),
     tableName: t('categories.table.name'),
-    columnActionName: t('table.columns.actions'),
   };
 
   if (isLoading) {

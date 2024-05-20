@@ -10,19 +10,18 @@ import {
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppEntities, AppEntity } from '../app/models';
+import { renderCellContent } from '../app/utils/fns';
 import { TableCrudBottomContent } from './TableCrudBottomContent';
-import { TableCrudCellContent } from './TableCrudCellContent';
 import { ITableCrudModalProps, TableCrudModal } from './TableCrudModal';
 import { TableCrudTopContent } from './TableCrudTopContent';
 
 export interface ITableCrudProps<T> {
   isStriped?: boolean;
-  columnActionName: string;
-  entityName: string;
+  entityNameTranslationKey: string;
   newItemButtonTooltipText: string;
   tableName: string;
-  tableHeaderColumnsNames: string[];
-  tableColumns: string[];
+  tableHeaderColumnsNames: { key: string; label: string }[];
+  columnToFilterOnSearch: keyof T;
   tableEmptyContentText: string;
   tableContent?: T[];
   modalCreateContent: React.ReactNode;
@@ -39,13 +38,12 @@ export interface ITableCrudProps<T> {
 }
 
 export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
-  columnActionName,
-  entityName,
+  entityNameTranslationKey,
   isStriped = false,
   newItemButtonTooltipText,
   tableName,
   tableHeaderColumnsNames,
-  tableColumns,
+  columnToFilterOnSearch,
   tableEmptyContentText,
   tableContent,
   modalCreateContent,
@@ -76,8 +74,11 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
     const end = start + rowsPerPage;
 
     if (hasSearchFilter) {
-      items = items.filter((user) =>
-        user.name.toLowerCase().includes(filterValue.toLowerCase())
+      items = items.filter((item) =>
+        item[columnToFilterOnSearch]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(filterValue.toLowerCase())
       );
     }
 
@@ -101,8 +102,16 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
     setPage(1);
   }, []);
 
+  const onGoToPageChange = useCallback((value?: string) => {
+    if (value) {
+      setPage(+value);
+    }
+  }, []);
+
+  const renderCell = useCallback(renderCellContent, []);
+
   const modalProps: ITableCrudModalProps<U> = {
-    entityName: t(entityName, { count: 1 }),
+    entityName: t(entityNameTranslationKey, { count: 1 }),
     item,
     isOpen,
     showFooter: modalType === 'delete',
@@ -134,18 +143,25 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
         topContentPlacement="outside"
         topContent={
           <TableCrudTopContent
-            title={t('table.name', { entityName: t(entityName, { count: 0 }) })}
+            title={t('table.name', {
+              entityName: t(entityNameTranslationKey, { count: 0 }),
+            })}
             newItemButtonTooltipText={newItemButtonTooltipText}
             onPress={() => {
               setModalType('create');
               onOpen();
             }}
+            searchPlaceholder={t('table.search.placeholder')}
             filterValue={filterValue}
             onClear={() => onClear()}
             onSearchChange={onSearchChange}
             totalItemsText={t('table.totalItems', {
-              total: filteredItems.length * pages,
-              entityName: t(entityName, { count: filteredItems.length }),
+              from: rowsPerPage * page - rowsPerPage + 1,
+              to: rowsPerPage * page - (rowsPerPage - filteredItems.length),
+              total: tableContent?.length,
+              entityName: t(entityNameTranslationKey, {
+                count: filteredItems.length,
+              }),
             })}
           />
         }
@@ -155,49 +171,55 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
             page={page}
             pages={pages}
             onChange={(page) => setPage(page)}
+            showGoToPage
+            onGoToPageChange={onGoToPageChange}
           />
         }
       >
-        <TableHeader>
-          {[...tableHeaderColumnsNames, columnActionName].map(
-            (column, index) => (
-              <TableColumn
-                key={index}
-                className={`uppercase ${
-                  column === columnActionName ? 'text-right' : 'text-left'
-                }`}
-              >
-                {column}
-              </TableColumn>
-            )
+        <TableHeader columns={tableHeaderColumnsNames}>
+          {(column) => (
+            <TableColumn
+              key={column.key}
+              className={`uppercase ${
+                column.key === 'actions' ? 'text-right' : 'text-left'
+              }`}
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody emptyContent={tableEmptyContentText} items={filteredItems}>
           {(data) => (
             <TableRow key={data.id}>
-              {[...tableColumns, 'actions'].map((column, j) => (
-                <TableCell key={j} className="text-left px-4 capitalize">
-                  <TableCrudCellContent
-                    columnName={column}
-                    data={data}
-                    onDeleteAction={async () => {
+              {(columnKey) => (
+                <TableCell
+                  key={`${columnKey}-${data.id}`}
+                  className="text-left px-4 capitalize"
+                >
+                  {renderCell({
+                    columnName: columnKey,
+                    data: data,
+                    onDeleteAction: async () => {
                       setItem(data);
                       setModalType('delete');
                       onOpen();
-                    }}
-                    onShowAction={() => {
+                    },
+                    onShowAction: () => {
                       setItem(data);
                       setModalType('show');
                       onOpen();
-                    }}
-                    onUpdateAction={() => {
+                    },
+                    onUpdateAction: () => {
                       setItem(data);
                       setModalType('update');
                       onOpen();
-                    }}
-                  />
+                    },
+                    deleteTooltipText: t('table.tooltips.delete'),
+                    showTooltipText: t('table.tooltips.show'),
+                    updateTooltipText: t('table.tooltips.update'),
+                  })}
                 </TableCell>
-              ))}
+              )}
             </TableRow>
           )}
         </TableBody>

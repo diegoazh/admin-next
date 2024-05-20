@@ -14,7 +14,7 @@
     },
     "table": {
       "name": "Tabla de {{entityName}}",
-      "totalItems": "se encontraron {{total}} {{entityName}}",
+      "totalItems": "viendo {{from}} a {{to}} de {{total}} {{entityName}}",
       "emptyContent": "Sin contenido",
       "columns": {
         "actions": "Acciones"
@@ -34,6 +34,9 @@
       },
       "search": {
         "placeholder": "buscar por nombre..."
+      },
+      "goToPage": {
+        "placeholder": "ir a página..."
       }
     },
     "products": {
@@ -46,7 +49,8 @@
         "columns": {
           "category": "categoría",
           "name": "nombre",
-          "available": "disponible"
+          "available": "disponible",
+          "actions": "acciones"
         }
       },
       "modals": {
