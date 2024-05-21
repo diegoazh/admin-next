@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button, ButtonGroup, NextUIProvider } from '@nextui-org/react';
 import { Inter } from 'next/font/google';
-import { Menu } from '../components';
+import { Menu } from './components';
 import './globals.css';
 import { useDarkMode } from './hooks';
 import './i18n-next';

@@ -9,8 +9,8 @@ import {
 } from '@nextui-org/react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, AppEntity } from '../app/models';
-import { renderCellContent } from '../app/utils/fns';
+import { AppEntities, AppEntity } from '../models';
+import { renderCellContent } from '../utils/fns';
 import { TableCrudBottomContent } from './TableCrudBottomContent';
 import { ITableCrudModalProps, TableCrudModal } from './TableCrudModal';
 import { TableCrudTopContent } from './TableCrudTopContent';

@@ -7,7 +7,7 @@ import {
   ITableCrudProps,
   ShowKeyValueItemTable,
   TableCrud,
-} from '../../components';
+} from '../components';
 import { useProducts } from '../hooks';
 import { ProductEntity } from '../models';
 

@@ -4,12 +4,13 @@ import { Card, Code, Skeleton } from '@nextui-org/react';
 import { useTranslation } from 'react-i18next';
 import { mutate } from 'swr';
 import {
+  CreateOrUpdateForm,
+  CrudFormInputs,
   IDefineShowCellContentFn,
-  ITableCrudProps,
-  ProductCategoryForm,
+  OnSubmitCreateOrUpdateFn,
   ShowKeyValueItemTable,
   TableCrud,
-} from '../../components';
+} from '../components';
 import {
   RequestMethods,
   productCategoriesKey,
@@ -18,10 +19,50 @@ import {
 } from '../hooks';
 import { ProductCategoryEntity } from '../models';
 
+type ProductCategoryInputs = {
+  name: string;
+  profit: number;
+};
+
 const Products = () => {
   const { data, error, isLoading } = useProductCategories();
   const { t } = useTranslation();
-  const { trigger } = useMutateProductCategory(RequestMethods.DELETE);
+  const { trigger: triggerDelete } = useMutateProductCategory(
+    RequestMethods.DELETE
+  );
+  const { isMutating: isCreating, trigger: triggerCreate } =
+    useMutateProductCategory<string>(RequestMethods.POST);
+  const { isMutating: isUpdating, trigger: triggerUpdate } =
+    useMutateProductCategory<string>(RequestMethods.PATCH);
+
+  const onSubmit: (
+    isUpate: boolean
+  ) => OnSubmitCreateOrUpdateFn<ProductCategoryInputs, ProductCategoryEntity> =
+    (isUpdate = false) =>
+    async ({
+      data,
+      item,
+      isOpen,
+      onClose,
+    }: {
+      data: ProductCategoryInputs;
+      item: ProductCategoryEntity;
+      isOpen: Boolean;
+      onClose: () => void;
+    }) => {
+      if (!isUpdate) {
+        await triggerCreate({ body: JSON.stringify({ ...data }) });
+      } else {
+        await triggerUpdate({
+          body: JSON.stringify({ ...data, id: item?.id }),
+        });
+      }
+      await mutate(productCategoriesKey);
+
+      if (isOpen) {
+        onClose();
+      }
+    };
 
   const headerColumns = [
     { key: 'property', label: t('table.show.columns.property') },
@@ -57,52 +98,29 @@ const Products = () => {
       }
     }
   };
-
-  const tableCrudProps: ITableCrudProps<ProductCategoryEntity> = {
-    isStriped: true,
-    modalCreateContent: <ProductCategoryForm />,
-    modalDeleteContent: (
-      <ShowKeyValueItemTable<ProductCategoryEntity>
-        tableTitle={t('table.show.title', {
-          entityName: t('categories.entityName', { count: 1 }),
-        })}
-        headerColumns={headerColumns}
-        defineCellContent={defineCellContent}
-      />
-    ),
-    modalShowContent: (
-      <ShowKeyValueItemTable<ProductCategoryEntity>
-        tableTitle={t('table.show.title', {
-          entityName: t('categories.entityName', { count: 1 }),
-        })}
-        headerColumns={headerColumns}
-        defineCellContent={defineCellContent}
-      />
-    ),
-    modalUpdateContent: <ProductCategoryForm isUpdate />,
-    entityNameTranslationKey: 'categories.entityName', // TODO: review this key
-    newItemButtonTooltipText: t('categories.buttons.newItem.tooltip', {
-      entityName: t('categories.entityName', { count: 1 }),
-    }),
-    modalCancelButtonText: t('table.modals.cancelButton'),
-    onModalCancelAction: () => console.log('cancel works!'),
-    modalOkButtonText: t('table.modals.okButton'),
-    onModalOkAction: async (modalType, item) => {
-      if (modalType === 'delete') {
-        await trigger({ body: JSON.stringify({ id: item?.id }) });
-        await mutate(productCategoriesKey);
-      }
+  const formInputs: CrudFormInputs<
+    ProductCategoryInputs,
+    ProductCategoryEntity
+  > = [
+    {
+      inputName: 'name',
+      defaultValue(item, isUpdate) {
+        return isUpdate ? item.name || '' : '';
+      },
+      label: t('categories.form.labels.name'),
+      type: 'text',
+      cssClasses: 'mb-4',
     },
-    columnToFilterOnSearch: 'name',
-    tableContent: data,
-    tableHeaderColumnsNames: [
-      { key: 'name', label: t('categories.table.columns.name') },
-      { key: 'profit', label: t('categories.table.columns.profit') },
-      { key: 'actions', label: t('table.columns.actions') },
-    ],
-    tableEmptyContentText: t('table.emptyContent'),
-    tableName: t('categories.table.name'),
-  };
+    {
+      inputName: 'profit',
+      defaultValue(item, isUpdate) {
+        return isUpdate ? item.profit.toString() || '0' : '';
+      },
+      label: t('categories.form.labels.profit'),
+      type: 'number',
+      cssClasses: '',
+    },
+  ];
 
   if (isLoading) {
     return (
@@ -123,7 +141,66 @@ const Products = () => {
     );
   }
 
-  return <TableCrud {...tableCrudProps}></TableCrud>;
+  return (
+    <TableCrud
+      isStriped={true}
+      modalCreateContent={
+        <CreateOrUpdateForm<ProductCategoryInputs, ProductCategoryEntity>
+          isMutating={isCreating}
+          onFormSubmit={onSubmit(false)}
+          formInputs={formInputs}
+        />
+      }
+      modalDeleteContent={
+        <ShowKeyValueItemTable<ProductCategoryEntity>
+          tableTitle={t('table.show.title', {
+            entityName: t('categories.entityName', { count: 1 }),
+          })}
+          headerColumns={headerColumns}
+          defineCellContent={defineCellContent}
+        />
+      }
+      modalShowContent={
+        <ShowKeyValueItemTable<ProductCategoryEntity>
+          tableTitle={t('table.show.title', {
+            entityName: t('categories.entityName', { count: 1 }),
+          })}
+          headerColumns={headerColumns}
+          defineCellContent={defineCellContent}
+        />
+      }
+      modalUpdateContent={
+        <CreateOrUpdateForm
+          isUpdate
+          isMutating={isUpdating}
+          onFormSubmit={onSubmit(false)}
+          formInputs={formInputs}
+        />
+      }
+      entityNameTranslationKey="categories.entityName"
+      newItemButtonTooltipText={t('categories.buttons.newItem.tooltip', {
+        entityName: t('categories.entityName', { count: 1 }),
+      })}
+      modalCancelButtonText={t('table.modals.cancelButton')}
+      onModalCancelAction={() => console.log('cancel works!')}
+      modalOkButtonText={t('table.modals.okButton')}
+      onModalOkAction={async (modalType, item) => {
+        if (modalType === 'delete') {
+          await triggerDelete({ body: JSON.stringify({ id: item?.id }) });
+          await mutate(productCategoriesKey);
+        }
+      }}
+      columnToFilterOnSearch={'name'}
+      tableContent={data}
+      tableHeaderColumnsNames={[
+        { key: 'name', label: t('categories.table.columns.name') },
+        { key: 'profit', label: t('categories.table.columns.profit') },
+        { key: 'actions', label: t('table.columns.actions') },
+      ]}
+      tableEmptyContentText={t('table.emptyContent')}
+      tableName={t('categories.table.name')}
+    ></TableCrud>
+  );
 };
 
 export default Products;
