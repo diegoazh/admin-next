@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react';
 import { createContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, AppEntity } from '../app/models';
+import { AppEntities, AppEntity } from '../types';
 
 export type ModalContextType<T extends AppEntities> = {
   isOpen: boolean;

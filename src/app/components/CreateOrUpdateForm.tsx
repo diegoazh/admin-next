@@ -1,9 +1,22 @@
 import { CheckIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
-import { Button, Input } from '@nextui-org/react';
+import {
+  Autocomplete,
+  AutocompleteItem,
+  Button,
+  Input,
+  Switch,
+  Textarea,
+} from '@nextui-org/react';
 import { HTMLInputTypeAttribute, useContext } from 'react';
-import { FieldValues, Path, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FieldValues,
+  Path,
+  RegisterOptions,
+  useForm,
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AppEntities } from '../models';
+import { AppEntities, AppEntity } from '../types';
 import { ModalContextType, ModalCrudContext } from './TableCrudModal';
 
 export type OnSubmitCreateOrUpdateFn<T, U extends AppEntities> = ({
@@ -13,16 +26,31 @@ export type OnSubmitCreateOrUpdateFn<T, U extends AppEntities> = ({
   onClose,
 }: {
   data: T;
-  item: U;
+  item?: AppEntity<U>;
   isOpen: Boolean;
   onClose: () => void;
 }) => Promise<void>;
-export type CrudFormInputs<T, U> = {
+export type CrudFormInputs<T, U extends AppEntities> = {
   inputName: Path<T>;
-  defaultValue: (item: U, isUpdate?: boolean) => string;
-  type: HTMLInputTypeAttribute;
+  defaultValue: (
+    item?: AppEntity<U>,
+    isUpdate?: boolean
+  ) => string | boolean | AppEntity<U>;
+  inputType: HTMLInputTypeAttribute;
+  componentType:
+    | 'input'
+    | 'textarea'
+    | 'autocomplete'
+    | 'select'
+    | 'checkbox'
+    | 'radio'
+    | 'switch';
   label: string;
   cssClasses?: string;
+  options?: RegisterOptions;
+  collectionItems?: Array<Record<'value' | 'label', string>>;
+  defaultSelectedKey?: (item?: AppEntity<U>) => string | undefined;
+  defaultInputValue?: (item?: AppEntity<U>) => string | undefined;
 }[];
 
 export interface ICreateOrUpdateFormProps<
@@ -46,12 +74,16 @@ export function CreateOrUpdateForm<
 }: ICreateOrUpdateFormProps<T, U>) {
   const { t } = useTranslation();
   const { isOpen, onClose, item } =
-    useContext<ModalContextType<T>>(ModalCrudContext);
+    useContext<ModalContextType<U>>(ModalCrudContext);
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<T>();
+
+  console.log(watch());
 
   return (
     <form
@@ -60,16 +92,72 @@ export function CreateOrUpdateForm<
       )}
       className="flex flex-col w-full"
     >
-      {formInputs?.map((input, index) => (
-        <Input
-          key={index}
-          {...register(input.inputName)}
-          defaultValue={input.defaultValue(item, isUpdate)}
-          type={input.type}
-          label={input.label}
-          className={input.cssClasses}
-        />
-      ))}
+      {formInputs?.map((input, index) => {
+        if (input.componentType === 'switch') {
+          return (
+            <Controller
+              key={index}
+              control={control}
+              name={input.inputName}
+              render={({ field }) => (
+                <Switch
+                  defaultSelected={!!input.defaultValue(item, isUpdate)}
+                  {...field}
+                  className={input.cssClasses}
+                >
+                  {input.label}
+                </Switch>
+              )}
+            />
+          );
+        }
+
+        if (input.componentType === 'textarea') {
+          return (
+            <Textarea
+              key={index}
+              {...register(input.inputName, { ...input.options })}
+              defaultValue={`${input.defaultValue(item, isUpdate)}`}
+              label={input.label}
+              className={input.cssClasses}
+              isRequired={!!input?.options?.required}
+            />
+          );
+        }
+
+        if (input.componentType === 'autocomplete') {
+          return (
+            <Autocomplete
+              key={index}
+              {...register(input.inputName, { ...input.options })}
+              label={input.label}
+              className={input.cssClasses}
+              isRequired={!!input?.options?.required}
+              defaultItems={input.collectionItems}
+              defaultSelectedKey={input?.defaultSelectedKey?.(item)}
+              defaultInputValue={input?.defaultInputValue?.(item)}
+            >
+              {(item) => (
+                <AutocompleteItem key={item.value} className="capitalize">
+                  {item.label}
+                </AutocompleteItem>
+              )}
+            </Autocomplete>
+          );
+        }
+
+        return (
+          <Input
+            key={index}
+            {...register(input.inputName, { ...input.options })}
+            defaultValue={`${input.defaultValue(item, isUpdate)}`}
+            type={input.inputType}
+            label={input.label}
+            className={input.cssClasses}
+            isRequired={!!input?.options?.required}
+          />
+        );
+      })}
       <div className="flex justify-end py-4">
         <Button
           variant="solid"

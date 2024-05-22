@@ -14,11 +14,8 @@ export interface ProductEntity {
   description?: string;
   available: boolean;
   productCategoryId: string;
+  productCategory?: ProductCategoryEntity;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
 }
-
-export type AppEntities = ProductCategoryEntity | ProductEntity;
-export type AppEntity<T extends ProductCategoryEntity | ProductEntity> =
-  T extends ProductCategoryEntity ? ProductCategoryEntity : ProductEntity;

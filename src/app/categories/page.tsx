@@ -12,12 +12,12 @@ import {
   TableCrud,
 } from '../components';
 import {
-  RequestMethods,
   productCategoriesKey,
   useMutateProductCategory,
   useProductCategories,
 } from '../hooks';
 import { ProductCategoryEntity } from '../models';
+import { RequestMethods } from '../utils';
 
 type ProductCategoryInputs = {
   name: string;
@@ -35,21 +35,14 @@ const Products = () => {
   const { isMutating: isUpdating, trigger: triggerUpdate } =
     useMutateProductCategory<string>(RequestMethods.PATCH);
 
-  const onSubmit: (
-    isUpate: boolean
-  ) => OnSubmitCreateOrUpdateFn<ProductCategoryInputs, ProductCategoryEntity> =
-    (isUpdate = false) =>
-    async ({
-      data,
-      item,
-      isOpen,
-      onClose,
-    }: {
-      data: ProductCategoryInputs;
-      item: ProductCategoryEntity;
-      isOpen: Boolean;
-      onClose: () => void;
-    }) => {
+  const onSubmit: (config: {
+    isUpdate: boolean;
+  }) => OnSubmitCreateOrUpdateFn<
+    ProductCategoryInputs,
+    ProductCategoryEntity
+  > =
+    ({ isUpdate }) =>
+    async ({ data, item, isOpen, onClose }) => {
       if (!isUpdate) {
         await triggerCreate({ body: JSON.stringify({ ...data }) });
       } else {
@@ -57,6 +50,7 @@ const Products = () => {
           body: JSON.stringify({ ...data, id: item?.id }),
         });
       }
+
       await mutate(productCategoriesKey);
 
       if (isOpen) {
@@ -105,20 +99,24 @@ const Products = () => {
     {
       inputName: 'name',
       defaultValue(item, isUpdate) {
-        return isUpdate ? item.name || '' : '';
+        return isUpdate ? item?.name || '' : '';
       },
       label: t('categories.form.labels.name'),
-      type: 'text',
+      inputType: 'text',
+      componentType: 'input',
       cssClasses: 'mb-4',
+      options: { required: true },
     },
     {
       inputName: 'profit',
       defaultValue(item, isUpdate) {
-        return isUpdate ? item.profit.toString() || '0' : '';
+        return isUpdate ? item?.profit?.toString() || '0' : '';
       },
       label: t('categories.form.labels.profit'),
-      type: 'number',
+      inputType: 'number',
+      componentType: 'input',
       cssClasses: '',
+      options: { required: true },
     },
   ];
 
@@ -142,12 +140,12 @@ const Products = () => {
   }
 
   return (
-    <TableCrud
+    <TableCrud<ProductCategoryEntity>
       isStriped={true}
       modalCreateContent={
         <CreateOrUpdateForm<ProductCategoryInputs, ProductCategoryEntity>
           isMutating={isCreating}
-          onFormSubmit={onSubmit(false)}
+          onFormSubmit={onSubmit({ isUpdate: false })}
           formInputs={formInputs}
         />
       }
@@ -173,7 +171,7 @@ const Products = () => {
         <CreateOrUpdateForm
           isUpdate
           isMutating={isUpdating}
-          onFormSubmit={onSubmit(false)}
+          onFormSubmit={onSubmit({ isUpdate: true })}
           formInputs={formInputs}
         />
       }
@@ -182,7 +180,7 @@ const Products = () => {
         entityName: t('categories.entityName', { count: 1 }),
       })}
       modalCancelButtonText={t('table.modals.cancelButton')}
-      onModalCancelAction={() => console.log('cancel works!')}
+      onModalCancelAction={() => console.log('cancel not implemented yet!')}
       modalOkButtonText={t('table.modals.okButton')}
       onModalOkAction={async (modalType, item) => {
         if (modalType === 'delete') {

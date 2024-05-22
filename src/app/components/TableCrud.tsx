@@ -9,10 +9,10 @@ import {
 } from '@nextui-org/react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, AppEntity } from '../models';
-import { renderCellContent } from '../utils/fns';
+import { AppEntities, AppEntity } from '../types';
+import { renderCellContent } from '../utils';
 import { TableCrudBottomContent } from './TableCrudBottomContent';
-import { ITableCrudModalProps, TableCrudModal } from './TableCrudModal';
+import { TableCrudModal } from './TableCrudModal';
 import { TableCrudTopContent } from './TableCrudTopContent';
 
 export interface ITableCrudProps<T> {
@@ -37,7 +37,7 @@ export interface ITableCrudProps<T> {
   ) => void | Promise<void>;
 }
 
-export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
+export function TableCrud<T extends AppEntities>({
   entityNameTranslationKey,
   isStriped = false,
   newItemButtonTooltipText,
@@ -54,11 +54,11 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
   onModalCancelAction,
   modalOkButtonText,
   onModalOkAction,
-}: ITableCrudProps<U>) {
+}: ITableCrudProps<AppEntity<T>>) {
   const [modalType, setModalType] = useState<
     'show' | 'create' | 'update' | 'delete' | undefined
   >(undefined);
-  const [item, setItem] = useState<U>();
+  const [item, setItem] = useState<AppEntity<T>>();
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [filterValue, setFilterValue] = useState('');
@@ -115,29 +115,6 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
   }, []);
 
   const renderCell = useCallback(renderCellContent, []);
-
-  const modalProps: ITableCrudModalProps<U> = {
-    entityName: t(entityNameTranslationKey, { count: 1 }),
-    item,
-    isOpen,
-    showFooter: modalType === 'delete',
-    showModalCancelButton: modalType === 'delete',
-    modalCancelButtonText,
-    onModalCancelAction,
-    modalContent:
-      modalType === 'create'
-        ? modalCreateContent
-        : modalType === 'show'
-        ? modalShowContent
-        : modalType === 'update'
-        ? modalUpdateContent
-        : modalDeleteContent,
-    onModalOkAction: async () => onModalOkAction(modalType, item),
-    modalOkButtonText,
-    showModalOkButton: modalType !== 'show',
-    modalType,
-    onOpenChange,
-  };
 
   return (
     <div className="flex flex-col w-full">
@@ -230,7 +207,29 @@ export function TableCrud<T extends AppEntities, U extends AppEntity<T>>({
           )}
         </TableBody>
       </Table>
-      <TableCrudModal {...modalProps} />
+      <TableCrudModal<AppEntity<T>>
+        entityName={t(entityNameTranslationKey, { count: 1 })}
+        item={item}
+        isOpen={isOpen}
+        showFooter={modalType === 'delete'}
+        showModalCancelButton={modalType === 'delete'}
+        modalCancelButtonText={modalCancelButtonText}
+        onModalCancelAction={onModalCancelAction}
+        modalContent={
+          modalType === 'create'
+            ? modalCreateContent
+            : modalType === 'show'
+            ? modalShowContent
+            : modalType === 'update'
+            ? modalUpdateContent
+            : modalDeleteContent
+        }
+        onModalOkAction={async () => onModalOkAction(modalType, item)}
+        modalOkButtonText={modalOkButtonText}
+        showModalOkButton={modalType !== 'show'}
+        modalType={modalType}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 }

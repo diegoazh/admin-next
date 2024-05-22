@@ -8,7 +8,7 @@ import {
 } from '@nextui-org/react';
 import { Key, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, AppEntity } from '../app/models';
+import { AppEntities, AppEntity } from '../types';
 import { ModalContextType, ModalCrudContext } from './TableCrudModal';
 
 export type IDefineShowCellContentFn = (

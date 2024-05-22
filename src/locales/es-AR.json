@@ -70,13 +70,13 @@
           "actions": "acciones"
         }
       },
-      "modals": {
-        "showTitle": "viendo {{entityName}}: {{productName}}",
-        "createTitle": "crear {{entityName}}",
-        "updateTitle": "actualizar {{entityName}}: {{productName}}",
-        "deleteTitle": "eliminar {{entityName}}: {{productName}}",
-        "cancelButton": "cancelar",
-        "okButton": "crear"
+      "form": {
+        "labels": {
+          "name": "Nombre",
+          "description": "Descripción",
+          "available": "disponible",
+          "productCategoryId": "categoría"
+        }
       }
     },
     "categories": {
