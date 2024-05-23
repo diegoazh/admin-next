@@ -80,18 +80,18 @@ export const Menu = () => {
           },
         },
         {
-          key: 'suppliers',
-          text: t('menu.suppliers'),
-          startContent: <UserGroupIcon className="w-4" />,
-          onPress() {},
-        },
-        {
           key: 'categories',
           text: t('menu.categories'),
           startContent: <TagIcon className="w-4" />,
           onPress() {
             router.push('/categories');
           },
+        },
+        {
+          key: 'suppliers',
+          text: t('menu.suppliers'),
+          startContent: <UserGroupIcon className="w-4" />,
+          onPress() {},
         },
       ],
     },
