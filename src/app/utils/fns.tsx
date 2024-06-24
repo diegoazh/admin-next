@@ -2,6 +2,7 @@ import { EyeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { Chip, Tooltip } from '@nextui-org/react';
 import React from 'react';
 import { Translation } from 'react-i18next';
+import { getValueOfTheKey } from './functions';
 
 export interface IRenderCellContentProps<T> {
   columnName: React.Key;
@@ -24,10 +25,7 @@ export function renderCellContent<T>({
   onShowAction,
   onUpdateAction,
 }: IRenderCellContentProps<T>) {
-  const columnData = ((columnName as string).split('.') as (keyof T)[]).reduce(
-    (value, col) => value[col],
-    data as any
-  );
+  const columnData = getValueOfTheKey<T>(columnName.toString(), data);
 
   if (columnName === 'actions') {
     return (

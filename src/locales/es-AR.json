@@ -9,7 +9,32 @@
     "deletedAt": "eliminado el",
     "description": "descripción",
     "available": "disponible",
+    "price": "precio",
+    "product": "producto",
     "productCategory": "categoría",
+    "quantity": "cantidad",
+    "type": "tipo",
+    "loading": "cargando",
+    "CASH": "efectivo",
+    "MP_DEBIT": "débito",
+    "MP_CREDIT": "crédito",
+    "MP_QR": "mp qr",
+    "TRANSFER": "transferencia",
+    "mode": "modo",
+    "txtDate": "fecha",
+    "product.name": "producto",
+    "product.available": "disponible",
+    "parsedMoney.txtCost": "costo",
+    "parsedMoney.txtPrice": "precio",
+    "parsedMoney.txtTotal": "total venta",
+    "parsedMoney.txtTotalCost": "total costo",
+    "parsedMoney.txtRevenue": "ganancia",
+    "product.productCategory.name": "categoría",
+    "header": {
+      "darkMode": "activar modo nocturno",
+      "lightMode": "activar modo diurno",
+      "byOS": "definido por el sistema"
+    },
     "menu": {
       "sell": "ventas",
       "expenses": "gastos",
@@ -26,6 +51,10 @@
       "name": "Tabla de {{entityName}}",
       "totalItems": "viendo {{from}} a {{to}} de {{total}} {{entityName}}",
       "emptyContent": "Sin contenido",
+      "rowsPerPage": "items por página",
+      "buttons": {
+        "newItem": { "tooltip": "crear {{entityName}}" }
+      },
       "columns": {
         "actions": "Acciones"
       },
@@ -59,9 +88,6 @@
     "products": {
       "entityName_one": "producto",
       "entityName_other": "productos",
-      "buttons": {
-        "newItem": { "tooltip": "crear {{entityName}}" }
-      },
       "table": {
         "columns": {
           "category": "categoría",
@@ -82,11 +108,7 @@
     "categories": {
       "entityName_one": "categoría",
       "entityName_other": "categorias",
-      "buttons": {
-        "newItem": { "tooltip": "crear {{entityName}}" }
-      },
       "table": {
-        "name": "Tabla de {{entityName}}",
         "columns": {
           "name": "nombre",
           "profit": "ganancia %"
@@ -100,6 +122,47 @@
         "buttons": {
           "create": "crear",
           "update": "actualizar"
+        }
+      }
+    },
+    "stocks": {
+      "entityName_one": "stock",
+      "entityName_other": "stocks",
+      "table": {
+        "columns": {
+          "type": "tipo",
+          "category": "categoría",
+          "product": "producto",
+          "quantity": "cantidad",
+          "price": "costo",
+          "finalPrice": "precio"
+        }
+      },
+      "form": {
+        "labels": {
+          "taxes": "I.V.A.",
+          "productCategoryId": "categoría",
+          "productId": "producto",
+          "quantity": "cantidad",
+          "price": "precio",
+          "onLine": "en línea"
+        }
+      }
+    },
+    "sells": {
+      "entityName_one": "venta",
+      "entityName_other": "ventas",
+      "table": {
+        "columns": {
+          "date": "fecha",
+          "product": "producto",
+          "mode": "modalidad",
+          "quantity": "cantidad",
+          "price": "precio",
+          "cost": "costo",
+          "total": "total venta",
+          "totalCost": "costo total",
+          "revenue": "ganancia"
         }
       }
     }

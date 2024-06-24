@@ -35,7 +35,7 @@ export const Menu = () => {
   const router = useRouter();
   const path = usePathname();
   const [selectedKeys, setSelectedKeys] = useState<Selection>(
-    new Set([path.replace('/', '') || 'sells'])
+    new Set([path.replace('/', '')])
   );
   const { t } = useTranslation();
 
@@ -52,7 +52,9 @@ export const Menu = () => {
           key: 'sells',
           text: t('menu.sell'),
           startContent: <ShoppingBagIcon className="w-4" />,
-          onPress() {},
+          onPress() {
+            router.push('/sells');
+          },
         },
         {
           key: 'expenses',
@@ -61,10 +63,12 @@ export const Menu = () => {
           onPress() {},
         },
         {
-          key: 'stock',
+          key: 'stocks',
           text: t('menu.stock'),
           startContent: <ChartBarSquareIcon className="w-4" />,
-          onPress() {},
+          onPress() {
+            router.push('/stocks');
+          },
         },
       ],
     },
@@ -107,7 +111,12 @@ export const Menu = () => {
       onSelectionChange={setSelectedKeys}
     >
       {menuContent.map((section, index) => (
-        <ListboxSection key={index} title={section.title} showDivider>
+        <ListboxSection
+          key={index}
+          title={section.title}
+          showDivider
+          className="capitalize"
+        >
           {section.content.map((item) => (
             <ListboxItem
               key={item.key}

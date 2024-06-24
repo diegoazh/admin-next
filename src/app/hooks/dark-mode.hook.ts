@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import { readDarkMode } from '../utils/functions';
 
 export const useDarkMode = () => {
@@ -8,7 +8,8 @@ export const useDarkMode = () => {
   const [isDarkModeEnabled, setDarkMode] = useState(
     globalThis?.localStorage?.theme
       ? globalThis?.localStorage.getItem('theme') === 'dark'
-      : globalThis?.matchMedia && globalThis?.matchMedia('(prefers-color-scheme: dark)').matches
+      : globalThis?.matchMedia &&
+          globalThis?.matchMedia('(prefers-color-scheme: dark)').matches
   );
 
   useEffect(() => {
@@ -45,8 +46,10 @@ export const useDarkMode = () => {
     !globalThis?.localStorage.getItem('theme') &&
     window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+  const isDarkMode = useMemo(() => isDarkModeEnabled, [isDarkModeEnabled]);
+
   return {
-    isDarkModeEnabled,
+    isDarkModeEnabled: isDarkMode,
     isThemeDefined,
     enableDarkMode,
     systemMode,

@@ -1,5 +1,13 @@
-import { Input, Pagination } from '@nextui-org/react';
+import {
+  Input,
+  Pagination,
+  Select,
+  SelectItem,
+  Selection,
+} from '@nextui-org/react';
+import { Key } from 'react';
 import { useTranslation } from 'react-i18next';
+import { upperFirst } from '../utils';
 
 export interface ITableCrudBottomContentProps {
   page: number;
@@ -8,6 +16,9 @@ export interface ITableCrudBottomContentProps {
   onClear?: () => void;
   onGoToPageChange: () => void;
   showGoToPage: boolean;
+  itemsPerPage: Selection;
+  itemsPerPageTxt: string;
+  onSelectionChange: (key: Selection) => any;
 }
 
 export function TableCrudBottomContent({
@@ -17,12 +28,29 @@ export function TableCrudBottomContent({
   onClear,
   onGoToPageChange,
   showGoToPage,
+  itemsPerPage,
+  itemsPerPageTxt,
+  onSelectionChange,
 }: ITableCrudBottomContentProps) {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-row">
-      <div className="flex w-full justify-start"></div>
+      <div className="flex w-full justify-start">
+        <Select
+          label={itemsPerPageTxt}
+          selectionMode="single"
+          selectedKeys={itemsPerPage}
+          onSelectionChange={onSelectionChange}
+          className="w-36"
+        >
+          <SelectItem key={10}>10</SelectItem>
+          <SelectItem key={20}>20</SelectItem>
+          <SelectItem key={50}>50</SelectItem>
+          <SelectItem key={100}>100</SelectItem>
+          <SelectItem key={150}>150</SelectItem>
+        </Select>
+      </div>
       <div className="flex w-full justify-center">
         <Pagination
           isCompact
@@ -34,15 +62,17 @@ export function TableCrudBottomContent({
           onChange={onChange}
         />
       </div>
-      {showGoToPage && <div className="flex w-full justify-end">
-        <Input
-          isClearable
-          className="w-[8rem] sm:max-w-[44%]"
-          placeholder={t('table.goToPage.placeholder')}
-          onClear={onClear}
-          onValueChange={onGoToPageChange}
-        />
-      </div>}
+      {showGoToPage && (
+        <div className="flex w-full justify-end">
+          <Input
+            isClearable
+            className="w-[8rem] sm:max-w-[44%]"
+            placeholder={upperFirst(t('table.goToPage.placeholder'))}
+            onClear={onClear}
+            onValueChange={onGoToPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }

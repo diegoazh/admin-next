@@ -16,26 +16,11 @@ import {
   useForm,
 } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AppEntities, AppEntity } from '../types';
-import { ModalContextType, ModalCrudContext } from './TableCrudModal';
+import { AppModel, AppModels, OnSubmitCreateOrUpdateFn } from '../types';
+import { ModalContextType, ModalCrudContext } from './ModalCrud';
 
-export type OnSubmitCreateOrUpdateFn<T, U extends AppEntities> = ({
-  data,
-  item,
-  isOpen,
-  onClose,
-}: {
-  data: T;
-  item?: AppEntity<U>;
-  isOpen: Boolean;
-  onClose: () => void;
-}) => Promise<void>;
-export type CrudFormInputs<T, U extends AppEntities> = {
+export type CrudFormInputs<T, U extends AppModels> = {
   inputName: Path<T>;
-  defaultValue: (
-    item?: AppEntity<U>,
-    isUpdate?: boolean
-  ) => string | boolean | AppEntity<U>;
   inputType: HTMLInputTypeAttribute;
   componentType:
     | 'input'
@@ -45,17 +30,33 @@ export type CrudFormInputs<T, U extends AppEntities> = {
     | 'checkbox'
     | 'radio'
     | 'switch';
-  label: string;
+  label: string | React.ReactNode;
+  step?: string;
+  max?: string;
+  min?: string;
+  maxlength?: string;
+  minlength?: string;
+  placeholder?: string;
   cssClasses?: string;
   options?: RegisterOptions;
   collectionItems?: Array<Record<'value' | 'label', string>>;
-  defaultSelectedKey?: (item?: AppEntity<U>) => string | undefined;
-  defaultInputValue?: (item?: AppEntity<U>) => string | undefined;
+  defaultValue: (
+    item?: AppModel<U>,
+    isUpdate?: boolean
+  ) => string | boolean | AppModel<U>;
+  defaultSelectedKey?: (
+    item?: AppModel<U>,
+    isUpdate?: boolean
+  ) => string | undefined;
+  defaultInputValue?: (
+    item?: AppModel<U>,
+    isUpdate?: boolean
+  ) => string | undefined;
 }[];
 
 export interface ICreateOrUpdateFormProps<
   T extends FieldValues,
-  U extends AppEntities
+  U extends AppModels
 > {
   isUpdate?: boolean;
   isMutating: boolean;
@@ -63,10 +64,7 @@ export interface ICreateOrUpdateFormProps<
   formInputs: CrudFormInputs<T, U>;
 }
 
-export function CreateOrUpdateForm<
-  T extends FieldValues,
-  U extends AppEntities
->({
+export function CreateOrUpdateForm<T extends FieldValues, U extends AppModels>({
   isUpdate,
   onFormSubmit,
   isMutating,
@@ -134,8 +132,8 @@ export function CreateOrUpdateForm<
               className={input.cssClasses}
               isRequired={!!input?.options?.required}
               defaultItems={input.collectionItems}
-              defaultSelectedKey={input?.defaultSelectedKey?.(item)}
-              defaultInputValue={input?.defaultInputValue?.(item)}
+              defaultSelectedKey={input?.defaultSelectedKey?.(item, isUpdate)}
+              defaultInputValue={input?.defaultInputValue?.(item, isUpdate)}
             >
               {(item) => (
                 <AutocompleteItem key={item.value} className="capitalize">
@@ -151,7 +149,9 @@ export function CreateOrUpdateForm<
             key={index}
             {...register(input.inputName, { ...input.options })}
             defaultValue={`${input.defaultValue(item, isUpdate)}`}
+            placeholder={input.placeholder}
             type={input.inputType}
+            step={input.step}
             label={input.label}
             className={input.cssClasses}
             isRequired={!!input?.options?.required}
