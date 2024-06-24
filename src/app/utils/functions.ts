@@ -7,6 +7,12 @@ import { CommonHeaders, RequestMethods } from './constants';
 /************************************
  * DARK MODE HELPERS
  ************************************/
+/**
+ * This function read the dark mode from the local storage
+ * and set or remove the required classes from the body tag
+ * 
+ * @returns void
+ */
 export function readDarkMode(): void {
   // On page load or when changing themes, best to add inline in `head` to avoid FOUC
   if (

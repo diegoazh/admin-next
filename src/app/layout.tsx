@@ -12,7 +12,6 @@ import {
   Tooltip,
 } from '@nextui-org/react';
 import { Inter } from 'next/font/google';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu } from './components';
 import './globals.css';
@@ -28,13 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { t } = useTranslation();
-  const [darkEnabled, setDarkEnabled] = useState(false);
   const { enableDarkMode, isDarkModeEnabled, isThemeDefined, systemMode } =
     useDarkMode();
-
-  useEffect(() => {
-    setDarkEnabled(isDarkModeEnabled);
-  }, [isDarkModeEnabled]);
 
   return (
     <html lang="es-AR">
@@ -51,7 +45,9 @@ export default function RootLayout({
                 <Tooltip
                   placement="left"
                   content={upperFirst(
-                    t(darkEnabled ? 'header.lightMode' : 'header.darkMode')
+                    t(
+                      isDarkModeEnabled ? 'header.lightMode' : 'header.darkMode'
+                    )
                   )}
                 >
                   <Button
@@ -61,7 +57,7 @@ export default function RootLayout({
                     color={isThemeDefined ? 'primary' : 'default'}
                     onClick={(ev) => enableDarkMode(ev)}
                   >
-                    {darkEnabled ? (
+                    {isDarkModeEnabled ? (
                       <SunIcon className="w-4" />
                     ) : (
                       <MoonIcon className="w-4" />

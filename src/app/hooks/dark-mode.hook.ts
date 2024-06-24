@@ -1,38 +1,48 @@
-import { MouseEvent, useEffect, useMemo, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import { readDarkMode } from '../utils/functions';
 
 export const useDarkMode = () => {
-  const [isThemeDefined, setTheme] = useState(
-    !!globalThis?.localStorage?.getItem('theme')
-  );
-  const [isDarkModeEnabled, setDarkMode] = useState(
-    globalThis?.localStorage?.theme
-      ? globalThis?.localStorage.getItem('theme') === 'dark'
-      : globalThis?.matchMedia &&
-          globalThis?.matchMedia('(prefers-color-scheme: dark)').matches
-  );
+  const [isThemeDefined, setTheme] = useState(false);
+  const [isDarkModeEnabled, setDarkMode] = useState(false);
 
   useEffect(() => {
     readDarkMode();
+    setTheme(!!globalThis?.localStorage?.getItem('theme'));
+    setDarkMode(
+      globalThis?.localStorage?.theme
+        ? globalThis?.localStorage.getItem('theme') === 'dark'
+        : globalThis?.matchMedia &&
+            globalThis?.matchMedia('(prefers-color-scheme: dark)').matches
+    );
   }, []);
 
-  const enableDarkMode = (ev: MouseEvent) => {
-    ev.preventDefault();
-    ev.stopPropagation();
+  const isSystemDarkMode = useCallback(
+    (): boolean =>
+      !globalThis?.localStorage.getItem('theme') &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches,
+    []
+  );
 
-    if (isDarkModeEnabled) {
-      globalThis?.localStorage.setItem('theme', 'light');
-      setDarkMode(false);
-    } else {
-      globalThis?.localStorage.setItem('theme', 'dark');
-      setDarkMode(true);
-    }
+  const enableDarkMode = useCallback(
+    (ev: MouseEvent) => {
+      ev.preventDefault();
+      ev.stopPropagation();
 
-    setTheme(!!globalThis?.localStorage.getItem('theme'));
-    readDarkMode();
-  };
+      if (isDarkModeEnabled) {
+        globalThis?.localStorage.setItem('theme', 'light');
+        setDarkMode(false);
+      } else {
+        globalThis?.localStorage.setItem('theme', 'dark');
+        setDarkMode(true);
+      }
 
-  const systemMode = (ev: MouseEvent) => {
+      setTheme(!!globalThis?.localStorage.getItem('theme'));
+      readDarkMode();
+    },
+    [isDarkModeEnabled]
+  );
+
+  const systemMode = useCallback((ev: MouseEvent) => {
     ev.preventDefault();
     ev.stopPropagation();
 
@@ -40,16 +50,10 @@ export const useDarkMode = () => {
     setTheme(!!globalThis?.localStorage.getItem('theme'));
     setDarkMode(isSystemDarkMode());
     readDarkMode();
-  };
-
-  const isSystemDarkMode = (): boolean =>
-    !globalThis?.localStorage.getItem('theme') &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  const isDarkMode = useMemo(() => isDarkModeEnabled, [isDarkModeEnabled]);
+  }, [isSystemDarkMode]);
 
   return {
-    isDarkModeEnabled: isDarkMode,
+    isDarkModeEnabled,
     isThemeDefined,
     enableDarkMode,
     systemMode,
